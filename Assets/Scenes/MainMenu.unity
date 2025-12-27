@@ -853,6 +853,7 @@ MonoBehaviour:
   _paddleHit: {fileID: 8300000, guid: 345e1d28e7893084b95edf24790b393d, type: 3}
   _wallHit: {fileID: 8300000, guid: a73136e8042c7854a9b005dc23526d35, type: 3}
   _lifeLost: {fileID: 8300000, guid: 425cd0a73668db247b360bd86f9e15e3, type: 3}
+  _brickBreak: {fileID: 0}
 --- !u!4 &566635582
 Transform:
   m_ObjectHideFlags: 0

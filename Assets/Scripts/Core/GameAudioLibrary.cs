@@ -3,7 +3,7 @@ using UnityEngine;
 public class GameAudioLibrary : MonoBehaviour
 {
     public static GameAudioLibrary Instance { get; private set; }
-    
+
     [Header("Music")]
     public AudioClip _menuMusic;
     public AudioClip _gameMusic;
@@ -13,7 +13,9 @@ public class GameAudioLibrary : MonoBehaviour
     public AudioClip _wallHit;
     public AudioClip _lifeLost;
     public AudioClip _brickBreak;
-    
+    //public AudioClip _brickHit;
+    //public AudioClip _levelClear;
+
 
     private void Awake()
     {

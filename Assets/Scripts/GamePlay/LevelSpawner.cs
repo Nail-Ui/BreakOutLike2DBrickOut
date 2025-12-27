@@ -6,36 +6,37 @@ public class LevelSpawner : MonoBehaviour
     [Header("Pool")]
     [SerializeField] private BrickPool _pool;
 
-    [Header("Layout")]
-    [SerializeField] private Vector2 _startPos = new Vector2(-6f, 3.5f);
-    [SerializeField] private int columbs = 12;
-    [SerializeField] private int rows = 6;
-    [SerializeField] private Vector2 _spacing = new Vector2(1.1f, 0.55f);
+    // [Header("Layout")]
+    // [SerializeField] private Vector2 _startPos = new Vector2(-6f, 3.5f);
+    // [SerializeField] private int columbs = 12;
+    // [SerializeField] private int rows = 6;
+    // [SerializeField] private Vector2 _spacing = new Vector2(1.1f, 0.55f);
 
-    [Header("Brick Stats")]
-    [SerializeField] private int _basePoints = 10;
-    [SerializeField] private bool _harderTopRows = true;
-
+    // [Header("Brick Stats")]
+    //  [SerializeField] private int _basePoints = 10;
+    // [SerializeField] private bool _harderTopRows = true;
     private readonly List<Brick> _active = new List<Brick>();
 
-    public int ActiveCount => _active.Count;
-
-    public void SpawnLevel()
+    public void Spawn(LevelData data)
     {
-        ClearLevel();
+        if (data == null) return;
 
-        for(int r = 0; r < rows; r++)
+        Clear();
+
+        for (int r = 0; r < data.rows; r++)
         {
-            for(int c = 0; c < columbs; c++)
+            for (int c = 0; c < data.columbs; c++)
             {
                 Brick brick = _pool.Get();
-                brick.transform.position = new Vector3(_startPos.x + c * _spacing.x, _startPos.y - r * _spacing.y, 0f);
-                brick.transform.rotation = Quaternion.identity;
 
-                int _hp = _harderTopRows ? Mathf.Clamp(rows - r, 1, 3) : 1; //üst sıra daha dayanıklı
-                int pts = _basePoints * _hp;
+                brick.transform.position = new Vector3(data._startPos.x + c * data._spacing.x, data._startPos.y - r * data._spacing.y, 0f);
+                //brick.transform.rotation = Quaternion.identity;
 
-                brick.Init(this, hpOverride: _hp, pointsOverride: pts);
+                int hp = Mathf.Clamp(data.maxRowHp - r, 1, data.maxRowHp);
+                // int _hp = _harderTopRows ? Mathf.Clamp(rows - r, 1, 3) : 1; //üst sıra daha dayanıklı
+                int points = hp * data.basePointPerHp;
+
+                brick.Init(this, hpOverride: hp, pointsOverride: points);
 
                 _active.Add(brick);
             }
@@ -48,19 +49,19 @@ public class LevelSpawner : MonoBehaviour
         _pool.Return(brick);
 
         //Hepsi bitti mi?
-        if(_active.Count == 0)
+        if (_active.Count == 0)
         {
-            GameManager.Instance.PaddleAndBallPosReset();
+            GameManager.Instance.OnLevelCleared();
         }
     }
 
-    public void ClearLevel()
+    public void Clear()
     {
-        for(int i = _active.Count - 1; i >= 0; i--)
+        for (int i = _active.Count - 1; i >= 0; i--)
         {
             _pool.Return(_active[i]);
         }
         _active.Clear();
     }
-
+    public int ActiveCount => _active.Count;
 }

@@ -16,7 +16,7 @@ public class Ball : MonoBehaviour
     [SerializeField] private Transform _paddle;
 
     [SerializeField] private float _offsetY = 0.5f;
-    private bool _isActive;
+    // private bool _isActive;
     public bool _isAttached = true;
     [SerializeField] private float _maxBounceAngle = 60f;
 
@@ -52,7 +52,7 @@ public class Ball : MonoBehaviour
 
     public void ResetBallPosition()
     {
-        _isActive = false;
+        // _isActive = false;
         _isAttached = true;
         _rb.linearVelocity = Vector2.zero;
 
@@ -76,7 +76,7 @@ public class Ball : MonoBehaviour
 
     private void AddStartingForce()
     {
-        _isActive = true;
+        //_isActive = true;
 
         //Unity Editor'da her Play butonuna basışta Random seed'i aynı set edilir (bug repro için). Bu yüzden 2-3 defa play/stop yapınca hep aynı yöne gider!
         //Bu satır her çağrıda farklı seed üretir → artık hep farklı yön!

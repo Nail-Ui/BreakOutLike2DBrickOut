@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8279a45845ec954abc1fb67cbac580b, type: 3}
+  m_Name: LevelData_02
+  m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  columbs: 8
+  rows: 4
+  _startPos: {x: -3.51, y: 3.5}
+  _spacing: {x: 1.1, y: 0.55}
+  maxRowHp: 2
+  basePointPerHp: 15

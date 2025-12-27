@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,6 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Button _restartButton;
 
     [SerializeField] private LevelSpawner _spawner;
+    [SerializeField] private LevelManager _levelManager;
 
     private int _lives;
     private int _score;
@@ -37,12 +37,9 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        _spawner.SpawnLevel();
         ResetLivesAndScore();
-
+        SpawnCurrentLevel();
         _gameOverPanel.SetActive(false);
-
-        PaddleAndBallPosReset();
 
         if (GameAudioLibrary.Instance != null)
         {
@@ -60,6 +57,11 @@ public class GameManager : MonoBehaviour
         {
             _ball.BallIsAttached();
         }
+    }
+    private void SpawnCurrentLevel()
+    {
+        _spawner.Spawn(_levelManager.Current);
+        PaddleAndBallPosReset();
     }
 
     public void OnBallLoss()
@@ -102,9 +104,10 @@ public class GameManager : MonoBehaviour
     public void RestartTheLevel()
     {
         AudioManager.Instance.StopSfx();
+        _levelManager.ResetToFirstLevel();
         ResetLivesAndScore();
         PaddleAndBallPosReset();
-        _spawner.SpawnLevel();
+        SpawnCurrentLevel();
         _gameOverPanel.SetActive(false);
         //SceneManager.LoadScene(1);
         Time.timeScale = 1f;
@@ -131,6 +134,29 @@ public class GameManager : MonoBehaviour
 
     public void OnLevelCleared()
     {
+
         PaddleAndBallPosReset();
+
+        bool hasNext = _levelManager.TryGoNextLevel();
+        if (hasNext)
+        {
+            Invoke(nameof(SpawnCurrentLevel), 1f);
+        }
+        else
+        {
+            // Tüm level'lar bitti: win ekranı yoksa main menu eklenebilir
+            // Buraya "You Win" paneli + highscore eklenebilir
+            Invoke(nameof(BackToMenuOrWin), 1f);
+        }
     }
+
+    private void BackToMenuOrWin()
+    {
+        //
+    }
+
+    // private void ResetAndSpawnNextLevel()
+    // {
+    //     _spawner.Spawn(LevelManage);
+    // }
 }
