@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _livesText;
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private GameObject _gameOverPanel;
+    [SerializeField] private GameObject _pausePanel;
     [SerializeField] private Button _mainMenuButton;
     [SerializeField] private Button _restartButton;
 
@@ -24,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     private int _lives;
     private int _score;
+    private bool _isPaused = false;
 
     private void Awake()
     {
@@ -49,13 +52,28 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && _ball._isAttached)
-        {
-            _ball.LaunchBall();
-        }
+        HandleLaunchInput();
+
         if (_ball._isAttached)
         {
-            _ball.BallIsAttached();
+            _ball.FollowPaddle();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (_isPaused)
+                ResumeGame();
+            else
+                PauseGame();
+        }
+    }
+
+    private void HandleLaunchInput()
+    {
+        if (!_ball._isAttached || _isPaused) return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _ball.LaunchBall();
         }
     }
     private void SpawnCurrentLevel()
@@ -90,6 +108,20 @@ public class GameManager : MonoBehaviour
         _gameOverPanel.gameObject.SetActive(true);
         Time.timeScale = 0f;
     }
+    public void PauseGame()
+    {
+        if (_isPaused) return;
+
+        _pausePanel.SetActive(true);
+        Time.timeScale = 0f;
+        _isPaused = true;
+    }
+    public void ResumeGame()
+    {
+        _pausePanel.SetActive(false);
+        Time.timeScale = 1f;
+        _isPaused = false;
+    }
 
     public void ReturnToMainMenu()
     {
@@ -109,6 +141,7 @@ public class GameManager : MonoBehaviour
         PaddleAndBallPosReset();
         SpawnCurrentLevel();
         _gameOverPanel.SetActive(false);
+        _pausePanel.SetActive(false);
         //SceneManager.LoadScene(1);
         Time.timeScale = 1f;
     }

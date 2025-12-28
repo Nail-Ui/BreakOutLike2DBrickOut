@@ -19,7 +19,7 @@ public class LevelSpawner : MonoBehaviour
 
     public void Spawn(LevelData data)
     {
-        if (data == null) return;
+        // if (data == null) return;
 
         Clear();
 
@@ -27,17 +27,20 @@ public class LevelSpawner : MonoBehaviour
         {
             for (int c = 0; c < data.columbs; c++)
             {
+                int cell = data.GetCell(r, c);
+                if(cell == 0) continue; //boş hüçre
+
                 Brick brick = _pool.Get();
 
                 brick.transform.position = new Vector3(data._startPos.x + c * data._spacing.x, data._startPos.y - r * data._spacing.y, 0f);
                 //brick.transform.rotation = Quaternion.identity;
 
-                int hp = Mathf.Clamp(data.maxRowHp - r, 1, data.maxRowHp);
+                int hp = cell; //1 = normal, 2 = strong
+                // int hp = Mathf.Clamp(data.maxRowHp - r, 1, data.maxRowHp);
                 // int _hp = _harderTopRows ? Mathf.Clamp(rows - r, 1, 3) : 1; //üst sıra daha dayanıklı
                 int points = hp * data.basePointPerHp;
 
                 brick.Init(this, hpOverride: hp, pointsOverride: points);
-
                 _active.Add(brick);
             }
         }

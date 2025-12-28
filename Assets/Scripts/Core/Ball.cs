@@ -45,7 +45,7 @@ public class Ball : MonoBehaviour
         // }
     }
 
-    public void BallIsAttached()
+    public void FollowPaddle()
     {
         transform.position = new Vector3(_paddle.position.x, _paddle.position.y + _offsetY, 0f);
     }
