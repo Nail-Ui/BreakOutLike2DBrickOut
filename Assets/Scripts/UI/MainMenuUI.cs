@@ -25,7 +25,7 @@ public class MainMenuUI : MonoBehaviour
         if (_playerNameInput != null) _playerNameInput.SetTextWithoutNotify(name);
         if (_musicSlider != null) _musicSlider.SetValueWithoutNotify(music);
         if (_sfxSlider != null) _sfxSlider.SetValueWithoutNotify(sfx);
-        if (_highScoreText != null) _highScoreText.text = $"High Score: {highScore}";
+        if (_highScoreText != null) _highScoreText.text = $"High Score: {name}: {highScore}";
 
         // Sesleri hemen uygula
         if (AudioManager.Instance != null)

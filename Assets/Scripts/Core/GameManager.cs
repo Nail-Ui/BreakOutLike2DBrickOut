@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     private int _lives;
     private int _score;
     private bool _isPaused = false;
+    private bool _gameEnded = false;
+    
 
     private void Awake()
     {
@@ -69,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleLaunchInput()
     {
-        if (!_ball._isAttached || _isPaused) return;
+        if (!_ball._isAttached || _isPaused || _gameEnded) return;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -86,14 +88,17 @@ public class GameManager : MonoBehaviour
     {
         _lives--;
 
+        AudioManager.Instance.PlaySfx(GameAudioLibrary.Instance._lifeLostClips);
+        
         if (_lives <= 0)
         {
             _lives = 0;
+            UpdateUI();
             GameOverPanel();
+            return;
         }
 
         UpdateUI();
-        AudioManager.Instance.PlaySfx(GameAudioLibrary.Instance._lifeLost);
         PaddleAndBallPosReset();
     }
 
@@ -105,8 +110,15 @@ public class GameManager : MonoBehaviour
 
     public void GameOverPanel()
     {
+        if(_gameEnded) return;
+        _gameEnded = true;
+
         _gameOverPanel.gameObject.SetActive(true);
+
+        SaveManager.TrySetHighScore(_score);
+
         Time.timeScale = 0f;
+        
     }
     public void PauseGame()
     {
@@ -143,6 +155,7 @@ public class GameManager : MonoBehaviour
         _gameOverPanel.SetActive(false);
         _pausePanel.SetActive(false);
         //SceneManager.LoadScene(1);
+        _gameEnded = false;
         Time.timeScale = 1f;
     }
 

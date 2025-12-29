@@ -15,21 +15,21 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance != null && Instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         //Audio Source var mı yok mu bundan emin oluyoruz
-        if(_musicSource == null)
+        if (_musicSource == null)
         {
             _musicSource = gameObject.AddComponent<AudioSource>();
         }
-        if(_sfxSource == null)
+        if (_sfxSource == null)
         {
             _sfxSource = gameObject.AddComponent<AudioSource>();
         }
@@ -47,7 +47,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        if(GameAudioLibrary.Instance != null)
+        if (GameAudioLibrary.Instance != null)
         {
             PlayMusic(GameAudioLibrary.Instance._menuMusic, loop: true);
         }
@@ -74,12 +74,14 @@ public class AudioManager : MonoBehaviour
     }
 
     // Music helpers
-    public void PlayMusic(AudioClip clip, bool loop = true)
+    public void PlayMusic(AudioClip[] clips, bool loop = true)
     {
-        if (clip == null) return;
+        if (clips == null || clips.Length == 0) return;
+        
+        AudioClip randomMusic = clips[Random.Range(0, clips.Length)];
 
         _musicSource.loop = loop;
-        _musicSource.clip = clip;
+        _musicSource.clip = randomMusic;
         _musicSource.Play();
     }
 
@@ -90,10 +92,13 @@ public class AudioManager : MonoBehaviour
     }
 
     // SFX helpers
-    public void PlaySfx(AudioClip clip, float volumeMultiplier = 1f)
+    public void PlaySfx(AudioClip[] clips, float volumeMultiplier = 1f)
     {
-        if(clip == null) return;
-        _sfxSource.PlayOneShot(clip, Mathf.Clamp01(volumeMultiplier));
+        if (clips == null || clips.Length == 0) return; //Boş array kontrolü
+
+        // Random clip seç (Her seferinde farklı bir clip seçilir)
+        AudioClip randomClip = clips[Random.Range(0, clips.Length)];
+        _sfxSource.PlayOneShot(randomClip, Mathf.Clamp01(volumeMultiplier));
     }
 
     public void StopSfx()
