@@ -115,7 +115,10 @@ public class GameManager : MonoBehaviour
 
         _gameOverPanel.gameObject.SetActive(true);
 
-        SaveManager.TrySetHighScore(_score);
+        //SaveManager.TrySetHighScore(_score);
+
+        string playerName = SaveManager.GetPlayerName();
+        SaveManager.TryAddScore(playerName, _score);
 
         Time.timeScale = 0f;
         

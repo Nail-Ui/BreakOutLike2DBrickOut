@@ -10,6 +10,9 @@ public class MainMenuUI : MonoBehaviour
     [SerializeField] private Slider _musicSlider;
     [SerializeField] private Slider _sfxSlider;
     [SerializeField] private TextMeshProUGUI _highScoreText;
+    [SerializeField] private TextMeshProUGUI _scoreText1;
+    [SerializeField] private TextMeshProUGUI _scoreText2;
+    [SerializeField] private TextMeshProUGUI _scoreText3;
     [SerializeField] private Button _startButton;
 
     [Header("Scenes")]
@@ -25,7 +28,7 @@ public class MainMenuUI : MonoBehaviour
         if (_playerNameInput != null) _playerNameInput.SetTextWithoutNotify(name);
         if (_musicSlider != null) _musicSlider.SetValueWithoutNotify(music);
         if (_sfxSlider != null) _sfxSlider.SetValueWithoutNotify(sfx);
-        if (_highScoreText != null) _highScoreText.text = $"High Score: {name}: {highScore}";
+        //if (_highScoreText != null) _highScoreText.text = $"High Score: {name}: {highScore}";
 
         // Sesleri hemen uygula
         if (AudioManager.Instance != null)
@@ -55,6 +58,12 @@ public class MainMenuUI : MonoBehaviour
             _startButton.onClick.RemoveListener(StartGame);
             _startButton.onClick.AddListener(StartGame);
         }
+
+        var scores = SaveManager.GetTopScores();
+
+        _scoreText1.text = $"1. {scores[0].name} - {scores[0].score}";
+        _scoreText2.text = $"2. {scores[1].name} - {scores[1].score}";
+        _scoreText3.text = $"3. {scores[2].name} - {scores[2].score}";
     }
 
     private void OnNameChanged(string value)
